@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vistar AI | Developed by Deepak Katal</title>
     <link href="https://fonts.googleapis.com" rel="stylesheet">
-    <!-- 1. Markdown Library (जरूरी है साफ टेक्स्ट के लिए) -->
+    <!-- Markdown के लिए Library -->
     <script src="https://cdn.jsdelivr.net"></script>
     
     <style>
@@ -50,16 +50,14 @@
 
         #chat-box { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px; scroll-behavior: smooth; }
 
-        /* Message Styling */
         .msg { padding: 14px 20px; border-radius: 18px; max-width: 85%; line-height: 1.6; font-size: 0.95rem; animation: fadeIn 0.3s ease; word-wrap: break-word; }
         .user-msg { align-self: flex-end; background: #38bdf8; color: #0f172a; border-bottom-right-radius: 4px; font-weight: 600; }
         .ai-msg { align-self: flex-start; background: rgba(255, 255, 255, 0.05); color: #e2e8f0; border-bottom-left-radius: 4px; border: 1px solid rgba(255,255,255,0.1); width: 100%; }
 
-        /* Markdown Style Fixes */
-        .ai-msg h1, .ai-msg h2, .ai-msg h3 { color: #38bdf8; margin: 10px 0; }
-        .ai-msg ul, .ai-msg ol { margin-left: 25px; margin-bottom: 10px; }
-        .ai-msg code { background: rgba(0,0,0,0.4); padding: 3px 6px; border-radius: 5px; color: #fb7185; font-family: monospace; }
-        .ai-msg pre { background: #020617; padding: 15px; border-radius: 12px; margin: 10px 0; overflow-x: auto; border: 1px solid #1e293b; }
+        /* Markdown Styles */
+        .ai-msg h3 { color: #38bdf8; margin: 10px 0; }
+        .ai-msg p { margin-bottom: 10px; }
+        .ai-msg code { background: rgba(0,0,0,0.3); padding: 2px 5px; border-radius: 4px; color: #fb7185; }
 
         .dev-tag { text-align: center; padding: 8px; font-size: 0.7rem; color: rgba(255, 255, 255, 0.3); }
         .dev-tag b { color: #38bdf8; }
@@ -75,7 +73,7 @@
         .send-btn { background: #38bdf8; border: none; }
         .send-btn svg { fill: #0f172a; width: 22px; }
 
-        .typing { font-size: 0.85rem; color: #38bdf8; margin: 0 0 10px 25px; display: none; font-weight: 500; }
+        .typing { font-size: 0.85rem; color: #38bdf8; margin: 0 0 10px 25px; display: none; }
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
     </style>
@@ -91,7 +89,7 @@
     <div class="chat-container">
         <div class="header">Vistar AI</div>
         <div id="chat-box">
-            <div class="msg ai-msg">Hey! I'm Vistar AI. Developed by Deepak Katal. How can I help you?</div>
+            <div class="msg ai-msg">Hey! I'm Vistar AI. Developed by Deepak Katal. How can I help you today?</div>
         </div>
         <div id="typing-ui" class="typing">Vistar is thinking...</div>
         
@@ -101,7 +99,7 @@
             <div id="mic-btn" class="icon-btn mic-btn" onclick="toggleMic()">
                 <svg viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z""")/>><path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z""")/>></svg>
             </div>
-            <input type="text" id="user-input" placeholder="Message Vistar..." autocomplete="off">
+            <input type="text" id="user-input" placeholder="Ask Vistar anything..." autocomplete="off">
             <button class="icon-btn send-btn" onclick="sendMsg()">
                 <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z""")/>></svg>
             </button>
@@ -117,7 +115,7 @@
 
     function scrollToBottom() { chatBox.scrollTop = chatBox.scrollHeight; }
 
-    // --- Mic Logic Fix ---
+    // Mic Logic
     let recognition;
     if ('webkitSpeechRecognition' in window || 'speechRecognition' in window) {
         const SpeechRecognition = window.webkitSpeechRecognition || window.speechRecognition;
@@ -126,7 +124,7 @@
         recognition.onresult = (e) => { input.value = e.results[0][0].transcript; sendMsg(); };
         recognition.onend = () => micBtn.classList.remove('active');
     }
-    function toggleMic() { recognition ? recognition.start() : alert("Mic not supported in this browser"); }
+    function toggleMic() { recognition ? recognition.start() : alert("Mic not supported"); }
 
     input.addEventListener("keypress", (e) => { if (e.key === "Enter") sendMsg(); });
 
@@ -149,15 +147,15 @@
             const data = await res.json();
             typingUi.style.display = "none";
 
-            // --- FIXED: data.response used here as per your Python code ---
-            const rawReply = data.response || "Sorry, I couldn't process that.";
+            // Python से आने वाले 'response' को साफ़ फॉर्मेट में दिखाना
+            const rawReply = data.response || "Sorry, try again!";
             const formattedAnswer = marked.parse(rawReply); 
 
             chatBox.innerHTML += `<div class="msg ai-msg">${formattedAnswer}</div>`;
             scrollToBottom();
         } catch (err) {
             typingUi.style.display = "none";
-            chatBox.innerHTML += `<div class="msg ai-msg" style="color:#f87171">Error: Connection lost. Make sure your Python server is running!</div>`;
+            chatBox.innerHTML += `<div class="msg ai-msg" style="color:#f87171">Error: Connection lost.</div>`;
         }
     }
 </script>
