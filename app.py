@@ -4,7 +4,7 @@
 # app = Flask(__name__)
 
 # # --- APNI GROQ API KEY YAHAN DALO ---
-# client = Groq(api_key="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")
+# client = Groq(api_key="")
 
 # @app.route('/')
 # def index():
@@ -81,3 +81,4 @@ def chat():
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
+
