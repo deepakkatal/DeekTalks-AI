@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -156,9 +156,149 @@
             chatBox.innerHTML += `<div class="msg ai-msg">Error: Backend connection failed.</div>`;
             console.error("Fetch Error:", error);
         }
-    }
+    } -->
 
-    input.addEventListener("keypress", (e) => { if (e.key === "Enter") sendMsg(); });
+    <!-- input.addEventListener("keypress", (e) => { if (e.key === "Enter") sendMsg(); });
 </script>
+</body>
+</html> -->
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Vistar AI</title>
+
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+<style>
+
+body{
+background:#020617;
+color:white;
+font-family:sans-serif;
+display:flex;
+flex-direction:column;
+align-items:center;
+}
+
+#chatbox{
+width:70%;
+height:70vh;
+overflow-y:auto;
+border:1px solid #1e293b;
+padding:20px;
+border-radius:10px;
+margin-top:20px;
+}
+
+.user{
+background:#0ea5e9;
+padding:10px;
+border-radius:10px;
+margin:10px;
+text-align:right;
+}
+
+.ai{
+background:#111827;
+padding:12px;
+border-radius:10px;
+margin:10px;
+line-height:1.6;
+}
+
+#inputArea{
+margin-top:10px;
+width:70%;
+display:flex;
+}
+
+input{
+flex:1;
+padding:10px;
+border-radius:8px;
+border:none;
+}
+
+button{
+padding:10px 20px;
+background:#06b6d4;
+border:none;
+border-radius:8px;
+margin-left:5px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>Vistar AI</h1>
+
+<div id="chatbox"></div>
+
+<div id="inputArea">
+<input id="message" placeholder="Type a message...">
+<button onclick="sendMessage()">Send</button>
+</div>
+
+<script>
+
+const chatbox = document.getElementById("chatbox")
+
+function addUserMessage(text){
+
+const div = document.createElement("div")
+div.className = "user"
+div.innerText = text
+
+chatbox.appendChild(div)
+
+}
+
+function addAIMessage(text){
+
+const div = document.createElement("div")
+div.className = "ai"
+
+div.innerHTML = marked.parse(text)
+
+chatbox.appendChild(div)
+
+}
+
+function sendMessage(){
+
+const input = document.getElementById("message")
+
+const message = input.value
+
+if(message === "") return
+
+addUserMessage(message)
+
+input.value = ""
+
+fetch("/chat",{
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify({message:message})
+})
+.then(res=>res.json())
+.then(data=>{
+
+addAIMessage(data.response)
+
+chatbox.scrollTop = chatbox.scrollHeight
+
+})
+
+}
+
+</script>
+
 </body>
 </html>
