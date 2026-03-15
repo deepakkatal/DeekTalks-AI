@@ -163,9 +163,9 @@
 </body>
 </html> -->
 
-
 <!DOCTYPE html>
 <html>
+
 <head>
 
 <title>Vistar AI</title>
@@ -175,9 +175,41 @@
 <style>
 
 body{
+margin:0;
 background:#020617;
 color:white;
 font-family:sans-serif;
+display:flex;
+}
+
+/* sidebar */
+
+#sidebar{
+width:220px;
+background:#020617;
+height:100vh;
+border-right:1px solid #1e293b;
+padding:20px;
+}
+
+#sidebar h3{
+margin-bottom:10px;
+}
+
+#sidebar button{
+width:100%;
+padding:10px;
+margin-top:10px;
+border:none;
+background:#0ea5e9;
+border-radius:8px;
+cursor:pointer;
+}
+
+/* main chat */
+
+#main{
+flex:1;
 display:flex;
 flex-direction:column;
 align-items:center;
@@ -189,8 +221,8 @@ height:70vh;
 overflow-y:auto;
 border:1px solid #1e293b;
 padding:20px;
-border-radius:10px;
 margin-top:20px;
+border-radius:10px;
 }
 
 .user{
@@ -210,9 +242,9 @@ line-height:1.6;
 }
 
 #inputArea{
-margin-top:10px;
-width:70%;
 display:flex;
+width:70%;
+margin-top:10px;
 }
 
 input{
@@ -224,10 +256,11 @@ border:none;
 
 button{
 padding:10px 20px;
-background:#06b6d4;
 border:none;
+background:#06b6d4;
 border-radius:8px;
 margin-left:5px;
+cursor:pointer;
 }
 
 </style>
@@ -236,13 +269,42 @@ margin-left:5px;
 
 <body>
 
-<h1>Vistar AI</h1>
+<!-- Sidebar -->
+
+<div id="sidebar">
+
+<h3>Ask About</h3>
+
+<button onclick="quickAsk('Who created you?')">
+Creator
+</button>
+
+<button onclick="quickAsk('What is Vistar AI?')">
+About AI
+</button>
+
+<button onclick="quickAsk('What can you do?')">
+Capabilities
+</button>
+
+</div>
+
+<!-- Chat -->
+
+<div id="main">
+
+<h2>Vistar AI</h2>
 
 <div id="chatbox"></div>
 
 <div id="inputArea">
-<input id="message" placeholder="Type a message...">
+
+<input id="message" placeholder="Type message...">
+
 <button onclick="sendMessage()">Send</button>
+
+</div>
+
 </div>
 
 <script>
@@ -264,11 +326,53 @@ function addAIMessage(text){
 const div = document.createElement("div")
 div.className = "ai"
 
-div.innerHTML = marked.parse(text)
+chatbox.appendChild(div)
+
+typeWriter(div, marked.parse(text))
+
+}
+
+/* typing animation */
+
+function typeWriter(element, text){
+
+let i = 0
+
+function typing(){
+
+if(i < text.length){
+
+element.innerHTML += text.charAt(i)
+
+i++
+
+setTimeout(typing,10)
+
+}
+
+}
+
+typing()
+
+}
+
+/* typing indicator */
+
+function showTyping(){
+
+const div = document.createElement("div")
+
+div.id = "typing"
+
+div.className = "ai"
+
+div.innerText = "Vistar AI is typing..."
 
 chatbox.appendChild(div)
 
 }
+
+/* send message */
 
 function sendMessage(){
 
@@ -280,23 +384,43 @@ if(message === "") return
 
 addUserMessage(message)
 
-input.value = ""
+input.value=""
+
+showTyping()
 
 fetch("/chat",{
+
 method:"POST",
+
 headers:{
 "Content-Type":"application/json"
 },
+
 body:JSON.stringify({message:message})
+
 })
+
 .then(res=>res.json())
+
 .then(data=>{
+
+document.getElementById("typing").remove()
 
 addAIMessage(data.response)
 
 chatbox.scrollTop = chatbox.scrollHeight
 
 })
+
+}
+
+/* quick ask */
+
+function quickAsk(text){
+
+document.getElementById("message").value=text
+
+sendMessage()
 
 }
 
