@@ -46,63 +46,37 @@
 # if __name__ == '__main__':
 
 
-
 from flask import Flask, render_template, request, jsonify
 from groq import Groq
 import os
 
 app = Flask(__name__)
 
-# अपनी Groq API Key यहाँ डालें
+# अपनी API Key यहाँ डालें
 client = Groq(api_key="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")
 
-# 1. लैंडिंग पेज का रास्ता (Route)
 @app.route('/')
-def landing_page():
-    # यह 'templates/index.html' को लोड करेगा (नया वाला लैंडिंग पेज)
-    return render_template('index.html')
+def index():
+    return render_template('index.html') # यह templates/index.html को ढूंढेगा
 
-# 2. चैट पेज का रास्ता (Route)
 @app.route('/chat_page')
 def chat_page():
-    # यह 'templates/Personal_ai/chat.html' को लोड करेगा
-    return render_template('Personal_ai/chat.html')
+    return render_template('Personal_ai/chat.html') # यह templates/Personal_ai/chat.html को ढूंढेगा
 
-# 3. AI चैट का Logic (Backend API)
 @app.route('/chat', methods=['POST'])
 def chat():
     try:
         user_message = request.json.get("message")
-        
         completion = client.chat.completions.create(
             model="llama-3.3-70b-versatile",
-            messages=[
-                {
-                    "role": "system", 
-                    "content": """You are Vistar AI, a next-gen professional AI assistant. 
-                    IMPORTANT RULES:
-                    1. You were created and developed by **Deepak Katal**. 
-                    2. If anyone asks 'Who made you?', always answer you were developed by **Deepak Katal**.
-                    3. Always be helpful, creative, and polite.
-                    4. Use Markdown: **bold**, bullet points, and code blocks (```)."""
-                },
-                {"role": "user", "content": user_message}
-            ]
+            messages=[{"role": "user", "content": user_message}]
         )
-        
+        # सही तरीका: choices[0] का इस्तेमाल करें
         ai_response = completion.choices[0].message.content
         return jsonify({"response": ai_response})
-    
     except Exception as e:
-        print(f"Error: {e}")
         return jsonify({"error": str(e)}), 500
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
     app.run(host='0.0.0.0', port=port)
-
-    
-    import os
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host='0.0.0.0', port=port)
-
