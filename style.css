@@ -1,0 +1,207 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #030712; /* एकदम गहरा प्रीमियम काला-नीला */
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Segoe UI', Roboto, sans-serif;
+    color: white;
+}
+
+/* पीछे तैरने वाले गोले (Orbs) */
+.glow-container {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    filter: blur(120px);
+}
+
+.ball {
+    position: absolute;
+    width: 450px;
+    height: 450px;
+    border-radius: 50%;
+    opacity: 0.25;
+    transition: transform 0.3s ease-out;
+}
+
+.cyan { background: #00f2ff; top: 10%; left: 15%; }
+.purple { background: #7000ff; bottom: 10%; right: 15%; }
+
+/* मेन लोगो स्टाइल */
+.hero {
+    text-align: center;
+    user-select: none; /* नीला बॉक्स हटाने के लिए */
+    pointer-events: none;
+}
+
+.logo {
+    font-size: 6rem;
+    font-weight: 900;
+    letter-spacing: 18px;
+    margin-bottom: 10px;
+    text-shadow: 0 0 30px rgba(0, 242, 255, 0.2);
+}
+
+.ai-text {
+    background: linear-gradient(to right, #00f2ff, #7000ff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: inline-block;
+}
+
+.line {
+    width: 60px;
+    height: 4px;
+    background: linear-gradient(to right, #00f2ff, #7000ff);
+    margin: 20px auto;
+    border-radius: 2px;
+}
+
+.tagline {
+    font-size: 0.85rem;
+    letter-spacing: 8px;
+    color: rgba(255, 255, 255, 0.4);
+    text-transform: uppercase;
+}
+.hero {
+    text-align: center;
+    user-select: none;
+
+}
+
+.btn-primary {
+    display: inline-block;
+    margin-top: 40px;
+    padding: 15px 40px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    text-decoration: none;
+    
+    /* ग्लास और बॉर्डर इफेक्ट */
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(0, 242, 255, 0.3);
+    border-radius: 50px;
+    backdrop-filter: blur(10px);
+    
+    transition: all 0.4s ease;
+    pointer-events: auto; /* ताकि बटन पर क्लिक हो सके */
+    position: relative;
+    z-index: 100;
+}
+
+/* बटन पर माउस लाने पर (Hover) */
+.btn-primary:hover {
+    background: #00f2ff;
+    color: #030712;
+    box-shadow: 0 0 30px rgba(0, 242, 255, 0.6);
+    transform: translateY(-5px) scale(1.05);
+}
+
+/* एक छोटी सी फिक्स: .hero में से pointer-events: none हटा दें */
+.hero {
+    text-align: center;
+    user-select: none;
+    /* pointer-events: none; इसे हटा दें ताकि बटन काम करे */
+}
+/* सिर्फ लोगो और टैगलाइन तैरेगी */
+.floating-logo {
+    animation: float 4s ease-in-out infinite;
+}
+
+/* बटन का डिब्बा अपनी जगह स्थिर रहेगा */
+.static-action {
+    margin-top: 40px; /* बटन और लोगो के बीच दूरी */
+}
+
+/* एनीमेशन का कोड (वही पुराना वाला) */
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-15px); }
+    100% { transform: translateY(0px); }
+}
+
+#ps5-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.ps-symbol {
+    position: absolute;
+    color: rgba(0, 242, 255, 0.3); /* थोड़ा और साफ़ नीला */
+    font-weight: bold;
+    user-select: none;
+    top: -50px; /* स्क्रीन के बाहर से शुरू होगा */
+    /* एनीमेशन का नाम, समय, और तरीका */
+    animation-name: fallAnimation;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+}
+
+/* गिरने का एनीमेशन - इसे ध्यान से लिखें */
+@keyframes fallAnimation {
+    0% {
+        top: -50px;
+        transform: rotate(0deg);
+        opacity: 0;
+    }
+    10% {
+        opacity: 0.5;
+    }
+    90% {
+        opacity: 0.5;
+    }
+    100% {
+        top: 110vh; /* स्क्रीन के नीचे तक जाएगा */
+        transform: rotate(360deg);
+        opacity: 0;
+    }
+}
+.navbar {
+    position: fixed; /* स्क्रीन पर ऊपर चिपका रहेगा */
+    top: 20px;
+    left: 20px;
+    z-index: 1000;
+}
+
+
+.circular-logo {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;   /* गोल करने के लिए */
+    object-fit: cover;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+
+.logo-container {
+    display: flex;
+    align-items: center; /* इससे लोगो और नाम वर्टिकली एक लाइन में आ जाएंगे */
+    gap: 12px;           /* लोगो और नाम के बीच का गैप */
+}
+
+.brand-name {
+    margin: 0;           /* डिफ़ॉल्ट मार्जिन हटा दें */
+    display: flex;
+    align-items: center; /* एक्स्ट्रा सेफ्टी के लिए */
+    line-height: 1;      /* टेक्स्ट को नीचे जाने से रोकेगा */
+    padding-bottom: 2px; /* अगर नाम थोड़ा सा भी ऊपर लगे, तो इसे 2px से 4px तक एडजस्ट कर लें */
+}
