@@ -167,47 +167,42 @@ def chat_page():
 
 @app.route('/chat', methods=['POST'])
 def chat():
-    try:
-        user_message = request.json.get("message")
 
-        completion = client.chat.completions.create(
-            model="llama-3.3-70b-versatile",
-            messages=[
-                {
-                    "role": "system",
-                    "content": """
+    user_message = request.json.get("message")
+
+    completion = client.chat.completions.create(
+        model="llama-3.3-70b-versatile",
+        messages=[
+            {
+                "role": "system",
+                "content": """
 You are Vistar AI, a professional AI assistant.
 
 Rules:
-1. Always respond in clean markdown format.
-2. Use headings and bullet points when needed.
-3. Keep answers structured and readable.
-4. Avoid messy formatting.
+- Respond in clean markdown
+- Use bullet points
+- Be structured and clear
 
-If someone asks who created you respond exactly:
+If someone asks who created you answer:
 
-I was developed by **Deepak Katal**.
+I was developed by **Deepak Katal**
 
-### Connect with him
+Connect with him:
 
-- **LinkedIn**  
+- LinkedIn
 www.linkedin.com/in/deepak-katal-796029305
 
-- **Instagram**  
+- Instagram
 https://www.instagram.com/dkarts_007/
 """
-                },
-                {"role": "user", "content": user_message}
-            ]
-        )
+            },
+            {"role": "user", "content": user_message}
+        ]
+    )
 
-        ai_response = completion.choices[0].message.content
+    ai_response = completion.choices[0].message.content
 
-        return jsonify({"response": ai_response})
-
-    except Exception as e:
-        print(e)
-        return jsonify({"response": "⚠️ AI error occurred"})
+    return jsonify({"response": ai_response})
 
 
 if __name__ == '__main__':
